@@ -37,20 +37,8 @@ Near real-time notification
 
 
 ## Architecture
+![Alt text for the image](screenshots/architecture.png)
 
-Gmail
-   ↓
-Gmail Trigger
-   ↓
-Get Message
-   ↓
-Extract Email Data
-   ↓
-AI Processing
-   ↓
-Discord Bot
-   ↓
-Discord Channel
 
 ## Implementation
 
@@ -75,11 +63,16 @@ An LLM analyzes the email and generates a concise summary.
 
 The processed information is sent to a Discord channel.
 
+![Alt text for the image](screenshots/workflow.png)
+
 ## Result
 
 The automation removes the need to manually monitor
 incoming emails and provides notifications directly
 inside Discord.
+
+![Alt text for the image](screenshots/discord-result.png)
+
 
 ## Technologies
 
