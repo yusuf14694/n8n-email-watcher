@@ -25,6 +25,17 @@ The workflow automatically processes incoming emails,
 extracts the relevant information, and sends a formatted
 notification to Discord.
 
+Before:
+Manual checking
+~30 emails/day
+~1–2 minutes/email
+
+After:
+Automated processing
+24/7 monitoring
+Near real-time notification
+
+
 ## Architecture
 
 Gmail
@@ -95,3 +106,4 @@ inside Discord.
 - Add notification priority
 - Store processed emails
 - Add monitoring and logging
+
