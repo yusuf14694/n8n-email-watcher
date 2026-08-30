@@ -59,8 +59,8 @@
       "name": "Gmail Trigger",
       "credentials": {
         "gmailOAuth2": {
-          "id": "xaxpQb2oz3JapaZV",
-          "name": "TransTrack Gmail Account"
+          "id": "xxxxxxxxxxxxx",
+          "name": "Gmail Account"
         }
       }
     },
@@ -82,8 +82,8 @@
       "webhookId": "2b93bc0d-d573-43ab-b410-b3a936234162",
       "credentials": {
         "gmailOAuth2": {
-          "id": "xaxpQb2oz3JapaZV",
-          "name": "TransTrack Gmail Account"
+          "id": "xxxxxxxxxxxxx",
+          "name": "Gmail Account"
         }
       }
     },
