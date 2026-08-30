@@ -1,0 +1,186 @@
+{
+  "name": "Email Watcher",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email Sender: {{ $json.headers.from }} Email Subject: {{ $json.subject }} Email Preview: {{ $json.text }}",
+        "options": {
+          "systemMessage": "You are a Product Owner assistant.\n\nAnalyze incoming emails and provide:\n\n1. Summary\n2. Action Items\n3. Priority\n4. Reason\n\nPriority Rules:\n\nHIGH:\n- Production outage\n- Critical bug\n- Customer escalation\n- Safety issue requiring immediate action\n- Contains words such as ASAP, urgent, critical, immediately, outage\n\nMEDIUM:\n- Feature requests\n- Internal requests\n- Reports needed within a few days\n- Work that requires planning\n\nLOW:\n- Information requests\n- Status updates\n- Newsletters\n- Routine reports\n- Anything explicitly stating \"no urgency\"\n\nDo not assume urgency unless the email explicitly indicates urgency.\n\nAlways explain why the priority was chosen."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -32
+      ],
+      "id": "a8a54d1c-4cf4-4d3f-8c39-5d3e43e5343b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gemma3:4b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        48,
+        176
+      ],
+      "id": "116db70e-66ef-4537-a90c-966d94aa1be1",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "WZNa4jJbrQZ0BYcJ",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -400,
+        -32
+      ],
+      "id": "2f244e26-3a97-4d95-8241-4ca143147017",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "xaxpQb2oz3JapaZV",
+          "name": "TransTrack Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -176,
+        -32
+      ],
+      "id": "606ffce4-6433-43df-b30d-e59b0fbaaf59",
+      "name": "Get a message",
+      "webhookId": "2b93bc0d-d573-43ab-b410-b3a936234162",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "xaxpQb2oz3JapaZV",
+          "name": "TransTrack Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "854255679220482068",
+          "mode": "list",
+          "cachedResultName": "yusuf1494's server",
+          "cachedResultUrl": "https://discord.com/channels/854255679220482068"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1517826986326753422",
+          "mode": "list",
+          "cachedResultName": "n8n-email-watcher",
+          "cachedResultUrl": "https://discord.com/channels/854255679220482068/1517826986326753422"
+        },
+        "content": "=# NEW EMAIL\n{{ $json.output }}\n\n**Timestamp:** {{ $('Get a message').item.json.headers.date }}\n\n**From:** {{ $('Get a message').item.json.from.value[0].address }} - {{ $('Get a message').item.json.from.value[0].name }}\n\n**Subject:** {{ $('Get a message').item.json.subject }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        400,
+        -32
+      ],
+      "id": "13887062-05f5-4428-bbac-8037a5552995",
+      "name": "Send a message",
+      "webhookId": "12248aea-4572-4120-bb40-9391ccd3664e",
+      "credentials": {
+        "discordBotApi": {
+          "id": "hKGYGUkYbJUGsJ9A",
+          "name": "n8n Email Watcher Bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8e7e4cd9-779a-433a-bda2-9598803df690",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "97d1af8ab252bb1b00769df19ccf0bdcd56f5fa65a730c0877c0f10d5df84b8d"
+  },
+  "id": "t3NUMsgBy4eg6afp",
+  "tags": []
+}
